@@ -1,4 +1,5 @@
 import java.sql.*;
+import java.util.Scanner;
 
 public class SqlApp {
 
@@ -9,16 +10,22 @@ public class SqlApp {
         String user = "root"; // find user name
         String password = "rootroot"; // find password
 
-        try {
+        Scanner scanner = new Scanner(System.in);
 
-            // establish connection to mysql database
-            Connection connection = DriverManager.getConnection(url, user, password);
+        System.out.println("Enter a SQL query: ");
+        String command = scanner.nextLine();
+
+        // establish connection to mysql database
+        // try with resources automatically closes connection if data type implements AutoClosable interface
+        try (Connection connection = DriverManager.getConnection(url, user, password);) {
 
             // create a statement object for executing sql queries
             Statement statement = connection.createStatement();
 
+
+            // Example query : "SELECT * from Products;"
             // execute a query to select all records from prods
-            statement.executeQuery("SELECT * from Products;");
+            statement.executeQuery(command);
 
             // get the resultSet object which holds the result of the query
             ResultSet resultSet = statement.getResultSet();
@@ -36,7 +43,7 @@ public class SqlApp {
                 // If you wanted to treat "UnitPrice" as a numeric value (e.g., for calculations),
                 // you could use getDouble() instead of getString(). This would return the value as a Double.
                 // For example:
-//                Double UnitPrice = resultSet.getDouble("UnitPrice");
+                //Double UnitPrice = resultSet.getDouble("UnitPrice");
 
                 // Print values of productName and UnitPrice for each row
                 System.out.println(productName + " " + unitPrice);
